@@ -1,0 +1,120 @@
+/* Responsive Breakpoints & Mobile Optimization */
+
+@media (max-width: 1024px) {
+  .hero-grid,
+  .about-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .hero-visual {
+    order: -1;
+    margin-bottom: 1rem;
+  }
+
+  .ai-core-container {
+    width: 300px;
+    height: 300px;
+  }
+
+  .ai-core-sphere {
+    width: 130px;
+    height: 130px;
+  }
+
+  .ring-1 { width: 190px; height: 190px; }
+  .ring-2 { width: 250px; height: 250px; }
+  .ring-3 { width: 290px; height: 290px; }
+
+  .chip-top-left { left: 0; top: 0; }
+  .chip-bottom-right { right: 0; bottom: 0; }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 64px;
+  }
+
+  .nav-menu, .terminal-toggle-btn {
+    display: none;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  .about-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-timeline {
+    padding-left: 1.75rem;
+  }
+
+  .timeline-marker {
+    left: -1.75rem;
+  }
+
+  .timeline-card,
+  .github-dashboard,
+  .contact-form-card,
+  .glass-card {
+    padding: 1.5rem;
+  }
+
+  .hero-name {
+    font-size: 2.2rem;
+  }
+
+  .hero-cta-group {
+    width: 100%;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+  }
+
+  .toast-container {
+    right: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .section {
+    padding: 3.5rem 0;
+  }
+
+  .hero-section {
+    padding-top: calc(var(--header-height) + 1.5rem);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .project-links {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
