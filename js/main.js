@@ -13,10 +13,21 @@ function showToast(message, type = 'info') {
   }
 
   const toast = document.createElement('div');
-  toast.className = 'toast';
-  const iconSvg = typeof SVGIcons !== 'undefined' ? getIconSVG(type === 'success' ? 'check-circle' : 'activity', 18) : '';
+  toast.className = `toast toast-${type}`;
+  
+  let iconName = 'activity';
+  let iconColor = 'var(--accent-cyan)';
+  if (type === 'success') {
+    iconName = 'check-circle';
+    iconColor = '#10b981';
+  } else if (type === 'error') {
+    iconName = 'alert-circle';
+    iconColor = '#ef4444';
+  }
+
+  const iconSvg = typeof SVGIcons !== 'undefined' ? getIconSVG(iconName, 18) : '';
   toast.innerHTML = `
-    <span style="display: inline-flex; color: var(--accent-cyan);">${iconSvg}</span>
+    <span style="display: inline-flex; color: ${iconColor}; flex-shrink: 0;">${iconSvg}</span>
     <span>${message}</span>
   `;
 
@@ -27,7 +38,7 @@ function showToast(message, type = 'info') {
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => toast.remove(), 300);
-  }, 3500);
+  }, 4000);
 }
 
 // Copy Email Helper
@@ -263,30 +274,86 @@ function setupMouseFollower() {
   });
 }
 
-// Contact Form Handler
+// Contact Form Handler with Web3Forms AJAX Integration
 function setupContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  const submitBtn = document.getElementById('contact-submit-btn') || form.querySelector('button[type="submit"]');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = document.getElementById('contact-name').value.trim();
-    const email = document.getElementById('contact-email').value.trim();
-    const message = document.getElementById('contact-message').value.trim();
+
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const messageInput = document.getElementById('contact-message');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const message = messageInput ? messageInput.value.trim() : '';
 
     if (!name || !email || !message) {
       showToast('Please fill out all required fields.', 'info');
       return;
     }
 
-    const mailtoUrl = `mailto:samdharanrozario@gmail.com?subject=Portfolio Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
-    
-    showToast('Redirecting to your email client...', 'success');
-    setTimeout(() => {
-      window.location.href = mailtoUrl;
-    }, 800);
+    // Basic email format check
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      showToast('Please enter a valid email address.', 'info');
+      return;
+    }
 
-    form.reset();
+    // Save original button content and lock button to prevent duplicate submissions
+    const originalBtnContent = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <span>Sending...</span>
+        <svg class="btn-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+      `;
+    }
+
+    try {
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData);
+
+      // Explicitly set dynamic subject and reply-to visitor email
+      payload.subject = `Portfolio Message from ${name}`;
+      payload.replyto = email;
+
+      // Handle honeypot botcheck: remove if untouched by bots
+      const botcheckField = form.querySelector('[name="botcheck"]');
+      if (!botcheckField || !botcheckField.checked) {
+        delete payload.botcheck;
+      }
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.status === 200 && result.success) {
+        showToast('Message sent successfully.', 'success');
+        form.reset();
+      } else {
+        const errorMsg = (result && result.message) ? result.message : 'Failed to send message. Please try again.';
+        showToast(errorMsg, 'error');
+      }
+    } catch (err) {
+      showToast('Unable to send message. Please check your connection and try again.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+      }
+    }
   });
 }
 

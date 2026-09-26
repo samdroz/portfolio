@@ -518,23 +518,33 @@
 
           <!-- Interactive Contact Form -->
           <div class="contact-form-card">
-            <form id="contact-form">
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+              <!-- Web3Forms Access Key -->
+              <input type="hidden" name="access_key" value="4c9b592d-283e-4305-9140-cbfcec15737d">
+
+              <!-- Web3Forms Custom Subject and Sender Configuration -->
+              <input type="hidden" name="subject" value="New Contact Message from Portfolio">
+              <input type="hidden" name="from_name" value="Portfolio Contact Form">
+
+              <!-- Web3Forms Honeypot Anti-Spam Field -->
+              <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
               <div class="form-group">
                 <label for="contact-name" class="form-label">Your Name</label>
-                <input type="text" id="contact-name" class="form-input" placeholder="e.g. Alex Smith" required>
+                <input type="text" id="contact-name" name="name" class="form-input" placeholder="e.g. Alex Smith" required autocomplete="name">
               </div>
 
               <div class="form-group">
                 <label for="contact-email" class="form-label">Email Address</label>
-                <input type="email" id="contact-email" class="form-input" placeholder="e.g. alex@example.com" required>
+                <input type="email" id="contact-email" name="email" class="form-input" placeholder="e.g. alex@example.com" required autocomplete="email">
               </div>
 
               <div class="form-group">
                 <label for="contact-message" class="form-label">Message / Project Inquiry</label>
-                <textarea id="contact-message" class="form-textarea" placeholder="Describe the internship, project collaboration, or inquiry..." required></textarea>
+                <textarea id="contact-message" name="message" class="form-textarea" placeholder="Describe the internship, project collaboration, or inquiry..." required></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width: 100%;">
                 <span>Send Message</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
               </button>
