@@ -184,16 +184,38 @@ function renderExperience() {
 // Render Certifications from data.js
 function renderCertifications() {
   const target = document.getElementById('certifications-render-target');
-  if (!target) return;
+  if (!target || !portfolioData.certifications) return;
 
   target.innerHTML = portfolioData.certifications.map(cert => `
-    <div class="cert-card">
-      <span class="cert-issuer">${cert.issuer} • ${cert.date}</span>
-      <h4 class="cert-title">${cert.title}</h4>
-      <p style="font-size: 0.85rem; color: var(--text-secondary);">${cert.desc}</p>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; padding-top: 0.75rem;">
-        ${cert.skills.map(s => `<span class="tech-tag" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">${s}</span>`).join('')}
+    <div class="cert-card ${cert.proctored ? 'priority' : ''}">
+      <div class="cert-card-header">
+        <span class="cert-issuer">${cert.issuer}</span>
+        ${cert.proctored ? `
+          <span class="cert-proctored-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Proctored Assessment</span>
+          </span>
+        ` : ''}
       </div>
+      <h4 class="cert-title">${cert.title}</h4>
+      <div class="cert-card-footer">
+        <span class="tech-tag">${cert.category}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Render Workshops & Additional Learning
+  const workshopsTarget = document.getElementById('workshops-render-target');
+  if (!workshopsTarget || !portfolioData.workshops) return;
+
+  workshopsTarget.innerHTML = portfolioData.workshops.map(item => `
+    <div class="workshop-card">
+      <div class="workshop-type">
+        <span class="pulse-dot" style="width: 6px; height: 6px; background: var(--accent-violet);"></span>
+        <span>${item.type}</span>
+      </div>
+      <h4 class="workshop-title">${item.title}</h4>
+      <p class="workshop-focus">${item.focus}</p>
     </div>
   `).join('');
 }

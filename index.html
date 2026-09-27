@@ -123,7 +123,10 @@
               <span>Available for internships & collaborations</span>
             </div>
 
-            <h1 class="hero-name">SAM DHARAN ROZARIO R</h1>
+            <h1 class="hero-name">
+              <span class="name-line name-line-1">SAM DHARAN</span>
+              <span class="name-line name-line-2">ROZARIO R</span>
+            </h1>
 
             <div class="hero-headline">
               <span>AI/ML Developer</span>
@@ -172,15 +175,25 @@
             </div>
           </div>
 
-          <!-- Futuristic Visual Core -->
+          <!-- Futuristic AI Centerpiece with Real Photo -->
           <div class="hero-visual">
-            <div class="ai-core-container">
+            <div class="hero-photo-container">
+              <!-- Soft ambient backdrop glow -->
+              <div class="hero-photo-glow"></div>
+
+              <!-- Orbiting Telemetry Rings -->
               <div class="ai-orbit-ring ring-1"></div>
               <div class="ai-orbit-ring ring-2"></div>
               <div class="ai-orbit-ring ring-3"></div>
 
-              <div class="ai-core-sphere">
-                <svg width="65" height="65" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>
+              <!-- Central Cybernetic Profile Portal -->
+              <div class="hero-photo-portal">
+                <div class="hero-photo-inner">
+                  <img src="assets/profile.jpg" alt="Sam Dharan Rozario R" class="hero-profile-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="hero-profile-fallback">
+                    <span>SDR</span>
+                  </div>
+                </div>
               </div>
 
               <!-- Floating Telemetry Chips -->
@@ -221,20 +234,6 @@
 
         <div class="about-grid">
           <div class="about-text-column">
-            <!-- Prepared Profile Photo Area -->
-            <div class="about-profile-wrapper">
-              <div class="about-profile-frame">
-                <img src="assets/profile.jpg" alt="Sam Dharan Rozario R" class="about-profile-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="about-profile-fallback">
-                  <span>SDR</span>
-                </div>
-              </div>
-              <div class="about-profile-meta">
-                <div class="about-profile-name">Sam Dharan Rozario R</div>
-                <div class="about-profile-role">CSE (AI &amp; ML) • AI Developer</div>
-              </div>
-            </div>
-
             <p>
               I am a Computer Science and Engineering student at <strong>St. Joseph's Institute of Technology, Chennai</strong>, specializing in <strong>Artificial Intelligence & Machine Learning</strong> (Expected Graduation: 2029).
             </p>
@@ -458,6 +457,19 @@
 
         <!-- Render Target for Certifications from data.js -->
         <div id="certifications-render-target" class="cert-grid"></div>
+
+        <!-- Separate Subsection: Workshops & Additional Learning -->
+        <div class="workshops-subsection">
+          <div class="workshops-header">
+            <div class="section-tag" style="margin-bottom: 0.75rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 0 3-3h7z"></path></svg>
+              <span>Learning &amp; Growth</span>
+            </div>
+            <h3 class="workshops-title">Workshops &amp; Additional Learning</h3>
+            <p class="workshops-subtitle">Hands-on technical workshops, domain immersion, and continuous problem-solving practice.</p>
+          </div>
+          <div id="workshops-render-target" class="workshops-grid"></div>
+        </div>
       </div>
     </section>
 

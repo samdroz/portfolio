@@ -13,19 +13,24 @@
     margin-bottom: 1rem;
   }
 
-  .ai-core-container {
-    width: 300px;
-    height: 300px;
+  .hero-photo-container {
+    width: 340px;
+    height: 340px;
   }
 
-  .ai-core-sphere {
-    width: 130px;
-    height: 130px;
+  .hero-photo-portal {
+    width: 215px;
+    height: 215px;
   }
 
-  .ring-1 { width: 190px; height: 190px; }
-  .ring-2 { width: 250px; height: 250px; }
-  .ring-3 { width: 290px; height: 290px; }
+  .hero-photo-glow {
+    width: 260px;
+    height: 260px;
+  }
+
+  .ring-1 { width: 245px; height: 245px; }
+  .ring-2 { width: 295px; height: 295px; }
+  .ring-3 { width: 335px; height: 335px; }
 
   .chip-top-left { left: 0; top: 0; }
   .chip-bottom-right { right: 0; bottom: 0; }
@@ -98,6 +103,41 @@
   .section {
     padding: 3.5rem 0;
   }
+
+  .hero-name {
+    font-size: 2rem;
+  }
+
+  .name-line {
+    white-space: normal;
+  }
+
+  .hero-photo-container {
+    width: 275px;
+    height: 275px;
+  }
+
+  .hero-photo-portal {
+    width: 175px;
+    height: 175px;
+  }
+
+  .hero-photo-glow {
+    width: 210px;
+    height: 210px;
+  }
+
+  .ring-1 { width: 195px; height: 195px; }
+  .ring-2 { width: 235px; height: 235px; }
+  .ring-3 { width: 270px; height: 270px; }
+
+  .telemetry-chip {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.72rem;
+  }
+
+  .chip-top-left { left: -8px; top: -8px; }
+  .chip-bottom-right { right: -8px; bottom: -8px; }
 
   .hero-section {
     padding-top: calc(var(--header-height) + 1.5rem);

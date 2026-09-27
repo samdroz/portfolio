@@ -171,40 +171,47 @@ const portfolioData = {
 
   certifications: [
     {
-      title: "AI & Machine Learning Foundations",
-      issuer: "Coursera / DeepLearning.AI",
-      category: "AI/ML",
-      date: "2025",
-      desc: "Comprehensive coursework covering neural networks, supervised learning, and algorithmic optimization.",
-      skills: ["Machine Learning", "Python", "Neural Networks"],
-      badge: "Foundations"
+      title: "Python for Data Science",
+      issuer: "NPTEL / IIT Madras",
+      proctored: true,
+      category: "Data Science"
     },
     {
-      title: "Computer Vision & Object Detection Specialist",
-      issuer: "Applied AI Workshop",
-      category: "Computer Vision",
-      date: "2025",
-      desc: "Deep dive into convolutional networks, YOLO architectures, and real-time OpenCV image manipulation.",
-      skills: ["OpenCV", "YOLOv8", "Computer Vision"],
-      badge: "Specialization"
+      title: "Fundamentals of Data Analytics",
+      issuer: "nasscom",
+      proctored: true,
+      category: "Data Analytics"
     },
     {
-      title: "Prompt Engineering & RAG Architecture",
-      issuer: "Self-Paced Specialization",
-      category: "GenAI",
-      date: "2025 - Present",
-      desc: "Hands-on exploration of vector databases, chunking strategies, embeddings, and context-window orchestration.",
-      skills: ["RAG", "FAISS", "LangChain", "Local LLMs"],
-      badge: "Ongoing"
+      title: "Getting Started with Generative AI",
+      issuer: "IBM",
+      proctored: false,
+      category: "Generative AI"
     },
     {
-      title: "Python for Data Science & AI Systems",
-      issuer: "NPTEL / Online Certification",
-      category: "Programming",
-      date: "2025",
-      desc: "Advanced data structures, algorithmic efficiency, and numerical computing pipelines in Python.",
-      skills: ["Python", "Data Structures", "Algorithms"],
-      badge: "Certified"
+      title: "Introduction to AI Concepts",
+      issuer: "Microsoft Learn",
+      proctored: false,
+      category: "AI Fundamentals"
+    },
+    {
+      title: "AWS Transform for Full-Stack Windows Modernization",
+      issuer: "AWS Training & Certification",
+      proctored: false,
+      category: "Cloud Modernization"
+    }
+  ],
+
+  workshops: [
+    {
+      title: "National Workshop on 5G Technologies",
+      type: "Technical Workshop",
+      focus: "5G Architecture, Next-Generation Wireless Systems & Network Infrastructure"
+    },
+    {
+      title: "SkillRack Problem Solving & Programming",
+      type: "Additional Learning",
+      focus: "Continuous Algorithmic Problem Solving, Code Efficiency & Data Structures"
     }
   ]
 };
