@@ -97,7 +97,6 @@ const portfolioData = {
       technologies: ["Python", "LangChain", "FAISS", "Hugging Face", "LLMs"],
       githubUrl: "https://github.com/samdroz/AI-PDF-RAG-Chatbot",
       liveUrl: "https://github.com/samdroz/AI-PDF-RAG-Chatbot",
-      customButtonLabel: "View Project",
       isLive: true,
       comingSoon: false,
       highlight: false,
