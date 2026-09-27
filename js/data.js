@@ -80,9 +80,9 @@ const portfolioData = {
       categoryFilter: "cv",
       description: "Next-generation visual surveillance and real-time situational intelligence architecture. Engineered for high-throughput video stream analysis, custom neural object tracking, and autonomous anomaly identification.",
       technologies: ["Python", "Computer Vision", "YOLO", "OpenCV", "Deep Learning"],
-      githubUrl: "https://github.com/samdroz",
+      githubUrl: "https://github.com/samdroz/Project_ARGUS",
       isLive: true,
-      liveUrl: "https://github.com/samdroz",
+      liveUrl: "https://github.com/samdroz/Project_ARGUS",
       highlight: true,
       stats: { metric: "Low Latency", label: "Real-time Stream Inference" },
       icon: "shield"

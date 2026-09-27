@@ -22,6 +22,14 @@ async function fetchGitHubData() {
 
   const fallbackRepos = [
     {
+      name: 'Project_ARGUS',
+      description: 'Next-generation visual surveillance and real-time situational intelligence architecture.',
+      language: 'Python',
+      stargazers_count: 5,
+      forks_count: 1,
+      html_url: 'https://github.com/samdroz/Project_ARGUS'
+    },
+    {
       name: 'smart-traffic-management-system',
       description: 'An AI-powered traffic monitoring system using computer vision to detect vehicles and assist with intelligent traffic management.',
       language: 'Python',

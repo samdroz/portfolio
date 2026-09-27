@@ -146,12 +146,19 @@ Focus: Computer Vision, Real-Time Detection, RAG & LLMs, Open-Source Software.`,
       case 'projects':
         this.appendLog(
           `FEATURED PROJECTS:
-1. Project ARGUS [Computer Vision & Surveillance Intelligence]
+1. Project ARGUS [Project_ARGUS • Computer Vision & Surveillance Intelligence]
 2. Smart Traffic Management System [YOLOv8 + OpenCV + Streamlit]
 3. Medi Assist Chatbot [Python + Flask + NLP]
 4. Face Detection using OpenCV [Real-time frame processing]
 5. RAG Chatbot [AI-PDF-RAG-Chatbot • LangChain + FAISS + LLMs]`, 'success'
         );
+        break;
+
+      case 'argus':
+      case 'project-argus':
+      case 'project_argus':
+        this.appendLog(`Opening Project ARGUS repository (https://github.com/samdroz/Project_ARGUS)...`, 'system');
+        window.open('https://github.com/samdroz/Project_ARGUS', '_blank');
         break;
 
       case 'exp':
