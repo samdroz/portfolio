@@ -73,6 +73,22 @@ const portfolioData = {
 
   projects: [
     {
+      id: "campusos",
+      title: "CampusOS",
+      badge: "Desktop App",
+      category: "Desktop Application",
+      categoryFilter: "desktop",
+      description: "CampusOS is an offline-first Windows desktop application designed to help college students manage their academic lives in one place. It brings together timetable management, attendance tracking, assignments, exam countdowns, and Markdown notes in a single application.",
+      technologies: ["React", "TypeScript", "Python", "FastAPI", "SQLite", "PyInstaller"],
+      githubUrl: "https://github.com/samdroz/CampusOS",
+      liveUrl: "https://github.com/samdroz/CampusOS/releases/tag/v1.0.1",
+      liveLabel: "Release v1.0.1",
+      isLive: true,
+      highlight: true,
+      stats: { metric: "v1.0.1", label: "Offline-First Academic Suite" },
+      icon: "app-window"
+    },
+    {
       id: "argus",
       title: "Project ARGUS",
       badge: "AI + Vision",
@@ -83,7 +99,7 @@ const portfolioData = {
       githubUrl: "https://github.com/samdroz/Project_ARGUS",
       isLive: true,
       liveUrl: "https://github.com/samdroz/Project_ARGUS",
-      highlight: true,
+      highlight: false,
       stats: { metric: "Low Latency", label: "Real-time Stream Inference" },
       icon: "shield"
     },
@@ -177,9 +193,15 @@ const portfolioData = {
     },
     {
       title: "Fundamentals of Data Analytics",
-      issuer: "nasscom",
+      issuer: "NASSCOM",
       proctored: true,
       category: "Data Analytics"
+    },
+    {
+      title: "Demystifying Networking",
+      issuer: "NPTEL / IIT Bombay",
+      proctored: true,
+      category: "Computer Networks"
     },
     {
       title: "Getting Started with Generative AI",

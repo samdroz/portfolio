@@ -105,6 +105,7 @@ function renderProjects(filter = 'all') {
         if (filter === 'cv') return p.categoryFilter === 'cv';
         if (filter === 'chatbots') return p.categoryFilter === 'chatbots';
         if (filter === 'aiml') return p.categoryFilter === 'cv' || p.categoryFilter === 'chatbots';
+        if (filter === 'desktop') return p.categoryFilter === 'desktop';
         return true;
       });
 
@@ -130,7 +131,7 @@ function renderProjects(filter = 'all') {
           ${p.liveUrl && p.liveUrl !== p.githubUrl ? `
             <a href="${p.liveUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
               ${getIconSVG('external-link', 15)}
-              <span>Live Demo</span>
+              <span>${p.liveLabel || 'Live Demo'}</span>
             </a>
           ` : ''}
         </div>
@@ -149,6 +150,9 @@ function setupProjectFilters() {
       btn.classList.add('active');
       const filter = btn.getAttribute('data-filter');
       renderProjects(filter);
+      if (window.portfolioMotion && typeof window.portfolioMotion.animateFilteredProjects === 'function') {
+        window.portfolioMotion.animateFilteredProjects();
+      }
     });
   });
 }
@@ -187,13 +191,13 @@ function renderCertifications() {
   if (!target || !portfolioData.certifications) return;
 
   target.innerHTML = portfolioData.certifications.map(cert => `
-    <div class="cert-card ${cert.proctored ? 'priority' : ''}">
+    <div class="cert-card ${(cert.proctored || cert.priority) ? 'priority' : ''}">
       <div class="cert-card-header">
         <span class="cert-issuer">${cert.issuer}</span>
-        ${cert.proctored ? `
+        ${(cert.proctored || cert.badge) ? `
           <span class="cert-proctored-badge">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Proctored Assessment</span>
+            <span>${cert.badge || 'Proctored Assessment'}</span>
           </span>
         ` : ''}
       </div>
@@ -273,6 +277,30 @@ function setupNavigation() {
   if (mobileToggle) mobileToggle.addEventListener('click', toggleMobileMenu);
   if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeMobileMenu);
   mobileLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+  // Smooth Anchor Navigation with Fixed Header Offset
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (!targetId || targetId === '#') return;
+      const targetElem = document.querySelector(targetId);
+      if (targetElem) {
+        e.preventDefault();
+        const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 72;
+        const elementPosition = targetElem.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - (headerOffset + 24);
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        if (history.pushState) {
+          history.pushState(null, null, targetId);
+        } else {
+          location.hash = targetId;
+        }
+      }
+    });
+  });
 }
 
 // Mouse Follower & 3D Tilt Card Light Position

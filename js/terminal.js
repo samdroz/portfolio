@@ -146,12 +146,20 @@ Focus: Computer Vision, Real-Time Detection, RAG & LLMs, Open-Source Software.`,
       case 'projects':
         this.appendLog(
           `FEATURED PROJECTS:
-1. Project ARGUS [Project_ARGUS • Computer Vision & Surveillance Intelligence]
-2. Smart Traffic Management System [YOLOv8 + OpenCV + Streamlit]
-3. Medi Assist Chatbot [Python + Flask + NLP]
-4. Face Detection using OpenCV [Real-time frame processing]
-5. RAG Chatbot [AI-PDF-RAG-Chatbot • LangChain + FAISS + LLMs]`, 'success'
+1. CampusOS [CampusOS • Offline-First Academic Life Management Application]
+2. Project ARGUS [Project_ARGUS • Computer Vision & Surveillance Intelligence]
+3. Smart Traffic Management System [YOLOv8 + OpenCV + Streamlit]
+4. Medi Assist Chatbot [Python + Flask + NLP]
+5. Face Detection using OpenCV [Real-time frame processing]
+6. RAG Chatbot [AI-PDF-RAG-Chatbot • LangChain + FAISS + LLMs]`, 'success'
         );
+        break;
+
+      case 'campusos':
+      case 'campus-os':
+      case 'campus_os':
+        this.appendLog(`Opening CampusOS repository (https://github.com/samdroz/CampusOS)...`, 'system');
+        window.open('https://github.com/samdroz/CampusOS', '_blank');
         break;
 
       case 'argus':

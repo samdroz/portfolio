@@ -1,0 +1,832 @@
+/* ==========================================================================
+   CINEMATIC ANIMATION & MOTION SYSTEM
+   Sam Dharan Rozario R — Futuristic AI Laboratory Motion Design
+   ========================================================================== */
+
+:root {
+  /* Motion Curves (Apple / Vercel level precision) */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-expo-out: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Transition Durations */
+  --duration-fast: 0.35s;
+  --duration-normal: 0.65s;
+  --duration-slow: 0.95s;
+  --duration-reveal: 0.75s;
+}
+
+/* ==========================================================================
+   1. GLOBAL SCROLL PROGRESS BAR (Top of Viewport)
+   ========================================================================== */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 2.5px;
+  background: linear-gradient(90deg, var(--accent-cyan), #6366f1, var(--accent-violet));
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(99, 102, 241, 0.5);
+  z-index: 10000;
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+/* ==========================================================================
+   2. CINEMATIC STARTUP INTRO OVERLAY
+   ========================================================================== */
+
+/* Lock body scrolling while intro is active to prevent page displacement */
+body.intro-active {
+  overflow: hidden !important;
+}
+
+/* Hide navbar while intro is active so it doesn't visually compete */
+body.intro-active .navbar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* If intro was already seen in this session, immediately hide before paint */
+.intro-already-seen .cinematic-intro {
+  display: none !important;
+}
+
+.cinematic-intro {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #030509;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  transform: translateY(0%);
+  transition: transform 0.65s var(--ease-cinematic), opacity 0.55s ease;
+}
+
+/* When intro finishes: intro content fades out immediately, and curtain slides up cleanly */
+.cinematic-intro.finishing .intro-content,
+.cinematic-intro.finishing .intro-scan-line,
+.cinematic-intro.finishing .intro-ambient-glow {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.cinematic-intro.finishing {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none !important;
+  transition: transform 0.65s var(--ease-cinematic) 0.12s, opacity 0.55s ease 0.15s;
+}
+
+.cinematic-intro.hidden {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Background Cyber Grid */
+.intro-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.intro-ambient-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.05) 45%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(50px);
+  animation: introGlowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes introGlowPulse {
+  0% { transform: scale(0.9); opacity: 0.4; }
+  100% { transform: scale(1.15); opacity: 0.8; }
+}
+
+/* Thin Cyan Scanning Beam */
+.intro-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--accent-cyan) 50%, transparent 95%);
+  box-shadow: 0 0 15px var(--accent-cyan), 0 0 30px var(--accent-cyan);
+  pointer-events: none;
+  opacity: 0;
+  animation: introScanSweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes introScanSweep {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Center Content */
+.intro-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  padding: 2rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Minimalist SDR Monogram Identity Mark */
+.intro-brand-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: scale(0.85);
+  animation: introMonogramIn 0.6s var(--ease-cinematic) 0.15s forwards;
+}
+
+@keyframes introMonogramIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-monogram {
+  font-family: var(--font-mono);
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 50%, var(--accent-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.5));
+}
+
+.intro-brand-corners .corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent-cyan);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.intro-brand-corners .tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+.intro-brand-corners .tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+.intro-brand-corners .bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+.intro-brand-corners .br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+
+.intro-brand-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: var(--radius-md);
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 75%);
+  pointer-events: none;
+  animation: introPulseRing 2s ease-in-out infinite;
+}
+
+@keyframes introPulseRing {
+  0%, 100% { opacity: 0.5; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* System Diagnostic & Status Sequence */
+.intro-telemetry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+  min-height: 52px;
+}
+
+.intro-sys-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fadeIn 0.5s ease 0.25s forwards;
+}
+
+.intro-status-text {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-height: 1.4em;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: introTextReveal 0.5s var(--ease-cinematic) 0.35s forwards;
+}
+
+@keyframes introTextReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Precision Progress Indicator */
+.intro-progress-container {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0;
+  animation: fadeIn 0.5s ease 0.4s forwards;
+}
+
+.intro-progress-track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: visible;
+}
+
+.intro-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-cyan), #6366f1);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  transition: width 0.12s linear;
+}
+
+.intro-progress-glow {
+  position: absolute;
+  top: -3px;
+  left: 0%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px var(--accent-cyan), 0 0 20px var(--accent-cyan);
+  transform: translateX(-50%);
+  transition: left 0.12s linear;
+}
+
+.intro-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.intro-meta-left {
+  letter-spacing: 0.06em;
+}
+
+.intro-meta-percent {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Skip Button */
+.intro-skip-btn {
+  position: absolute;
+  bottom: 2rem;
+  right: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+  animation: fadeIn 0.5s ease 0.6s forwards;
+}
+
+.intro-skip-btn:hover {
+  color: #ffffff;
+  border-color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.intro-skip-btn kbd {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.68rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* ==========================================================================
+   3. HERO ENTRANCE COORDINATED ANIMATIONS
+   Scoped to .js-reveal-enabled for full resilience if JS fails
+   ========================================================================== */
+.navbar {
+  transition: opacity 0.5s var(--ease-cinematic), background var(--transition-normal), border-color var(--transition-normal);
+}
+
+.hero-active .navbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.js-reveal-enabled .hero-name {
+  overflow: hidden;
+}
+
+.js-reveal-enabled .name-line {
+  display: block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition: transform 0.85s var(--ease-cinematic), opacity 0.7s ease;
+  will-change: transform, opacity;
+}
+
+.hero-active .name-line-1 {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.hero-active .name-line-2 {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.22s;
+}
+
+.js-reveal-enabled .hero-content .status-badge {
+  transform: translateY(-14px);
+  opacity: 0;
+  transition: transform 0.7s var(--ease-cinematic), opacity 0.6s ease;
+}
+
+.hero-active .status-badge {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.04s;
+}
+
+.js-reveal-enabled .hero-headline {
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 0.75s var(--ease-cinematic), opacity 0.65s ease;
+}
+
+.hero-active .hero-headline {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.32s;
+}
+
+.js-reveal-enabled .hero-desc {
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.8s var(--ease-cinematic), opacity 0.7s ease;
+}
+
+.hero-active .hero-desc {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.42s;
+}
+
+.js-reveal-enabled .hero-cta-group .btn {
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 0.7s var(--ease-cinematic), opacity 0.6s ease, background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hero-active .hero-cta-group .btn:nth-child(1) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.5s;
+}
+
+.hero-active .hero-cta-group .btn:nth-child(2) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.58s;
+}
+
+.hero-active .hero-cta-group .btn:nth-child(3) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.66s;
+}
+
+.js-reveal-enabled .hero-social-group {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.65s ease, transform 0.65s var(--ease-cinematic);
+}
+
+.hero-active .hero-social-group {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.74s;
+}
+
+/* Hero Cybernetic Centerpiece */
+.js-reveal-enabled .hero-photo-portal {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.95s var(--ease-cinematic), opacity 0.8s ease;
+}
+
+.hero-active .hero-photo-portal {
+  transform: scale(1);
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+.js-reveal-enabled .ai-orbit-ring {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 1s ease, transform 1s var(--ease-cinematic);
+}
+
+.hero-active .ai-orbit-ring {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.35s;
+}
+
+.js-reveal-enabled .telemetry-chip {
+  opacity: 0;
+  transition: opacity 0.75s ease, transform 0.75s var(--ease-cinematic);
+}
+
+.js-reveal-enabled .chip-top-left {
+  transform: translate(-16px, -16px);
+}
+
+.js-reveal-enabled .chip-bottom-right {
+  transform: translate(16px, 16px);
+}
+
+.hero-active .chip-top-left {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition-delay: 0.55s;
+}
+
+.hero-active .chip-bottom-right {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition-delay: 0.68s;
+}
+
+/* ==========================================================================
+   4. SCROLL-TRIGGERED SECTION ANIMATIONS
+   Scoped to .js-reveal-enabled so elements remain 100% visible if JS is disabled
+   ========================================================================== */
+.js-reveal-enabled .reveal-init {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity var(--duration-reveal) var(--ease-cinematic),
+              transform var(--duration-reveal) var(--ease-cinematic);
+  will-change: transform, opacity;
+}
+
+.js-reveal-enabled .reveal-init.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger Delay Utility Classes */
+.reveal-stagger-1 { transition-delay: 0.08s !important; }
+.reveal-stagger-2 { transition-delay: 0.16s !important; }
+.reveal-stagger-3 { transition-delay: 0.24s !important; }
+.reveal-stagger-4 { transition-delay: 0.32s !important; }
+.reveal-stagger-5 { transition-delay: 0.40s !important; }
+.reveal-stagger-6 { transition-delay: 0.48s !important; }
+
+/* Section Header Typography Reveals */
+.section-header .section-tag {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease-cinematic);
+}
+
+.section-header.revealed .section-tag {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.section-header .section-title {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.75s ease 0.1s, transform 0.75s var(--ease-cinematic) 0.1s;
+}
+
+.section-header.revealed .section-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-header .section-subtitle {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.75s ease 0.2s, transform 0.75s var(--ease-cinematic) 0.2s;
+}
+
+.section-header.revealed .section-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   5. COMPONENT-SPECIFIC SCROLL REVEALS & HOVERS
+   ========================================================================== */
+
+/* About Stat Cards: Light Sweep on Entrance */
+.js-reveal-enabled .stat-card.revealed {
+  position: relative;
+  overflow: hidden;
+}
+
+.js-reveal-enabled .stat-card.revealed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.08), transparent);
+  transform: skewX(-20deg);
+  animation: cardSweep 1.2s var(--ease-cinematic) 0.2s 1 forwards;
+  pointer-events: none;
+}
+
+@keyframes cardSweep {
+  to {
+    left: 200%;
+  }
+}
+
+.js-reveal-enabled .stat-card.revealed:hover,
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-cyan);
+}
+
+/* Skills Progressive Grid Entrance */
+.js-reveal-enabled .skill-category-block.revealed .skill-card {
+  animation: skillEntrance 0.55s var(--ease-cinematic) both;
+}
+
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(1) { animation-delay: 0.04s; }
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(2) { animation-delay: 0.08s; }
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(3) { animation-delay: 0.12s; }
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(4) { animation-delay: 0.16s; }
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(5) { animation-delay: 0.20s; }
+.js-reveal-enabled .skill-category-block.revealed .skill-card:nth-child(6) { animation-delay: 0.24s; }
+
+@keyframes skillEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skill-card {
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.js-reveal-enabled .skill-card.revealed:hover,
+.skill-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(0, 240, 255, 0.14);
+}
+
+.skill-card:hover .skill-icon-wrapper {
+  background: rgba(0, 240, 255, 0.18);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+  transform: scale(1.05);
+}
+
+/* Project Cards: Cybernetic Accent & Elevated Hover */
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.5s var(--ease-cinematic);
+  pointer-events: none;
+}
+
+.project-card:hover::before,
+.project-card.featured::before {
+  transform: scaleX(1);
+}
+
+.js-reveal-enabled .project-card.revealed:hover,
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-hover);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 240, 255, 0.22);
+}
+
+.project-card:hover .project-title {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.32);
+}
+
+.project-card:hover .tech-tag {
+  border-color: rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.06);
+}
+
+/* Timeline Progressive Line-Drawing & Marker Spring */
+.js-reveal-enabled .experience-timeline::before {
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1.2s var(--ease-cinematic) 0.15s;
+}
+
+.js-reveal-enabled .experience-timeline.revealed::before {
+  transform: scaleY(1);
+}
+
+.js-reveal-enabled .timeline-item {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.8s var(--ease-cinematic), transform 0.8s var(--ease-cinematic);
+}
+
+.js-reveal-enabled .timeline-item.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.js-reveal-enabled .timeline-item .timeline-marker {
+  transform: scale(0);
+  transition: transform 0.6s var(--ease-bounce) 0.2s;
+}
+
+.js-reveal-enabled .timeline-item.revealed .timeline-marker {
+  transform: scale(1);
+  box-shadow: 0 0 16px var(--accent-cyan);
+}
+
+/* Certifications Cards: Unified Treatment */
+.js-reveal-enabled .cert-card.revealed:hover,
+.cert-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 240, 255, 0.18);
+}
+
+/* Contact Channels Interactive Response */
+.contact-item-link {
+  transition: transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.js-reveal-enabled .contact-item-link.revealed:hover,
+.contact-item-link:hover {
+  transform: translateX(6px);
+  border-color: var(--border-cyan);
+}
+
+.contact-item-link:hover .contact-item-icon {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   6. PERFORMANCE & ACCESSIBILITY OVERRIDES
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-intro {
+    display: none !important;
+  }
+
+  .scroll-progress-bar {
+    display: none !important;
+  }
+
+  body.intro-active {
+    overflow: auto !important;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .name-line,
+  .hero-content .status-badge,
+  .hero-headline,
+  .hero-desc,
+  .hero-cta-group .btn,
+  .hero-social-group,
+  .hero-photo-portal,
+  .ai-orbit-ring,
+  .telemetry-chip,
+  .reveal-init,
+  .section-header .section-tag,
+  .section-header .section-title,
+  .section-header .section-subtitle,
+  .timeline-item,
+  .experience-timeline::before,
+  .timeline-marker,
+  .navbar {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* Mobile Optimizations for Intro */
+@media (max-width: 640px) {
+  .intro-content {
+    padding: 1.5rem;
+  }
+
+  .intro-brand-wrapper {
+    width: 76px;
+    height: 76px;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-monogram {
+    font-size: 1.8rem;
+  }
+
+  .intro-status-text {
+    font-size: 0.78rem;
+  }
+
+  .intro-skip-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.75rem;
+  }
+}

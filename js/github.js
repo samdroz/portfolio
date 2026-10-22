@@ -22,36 +22,28 @@ async function fetchGitHubData() {
 
   const fallbackRepos = [
     {
+      name: 'AI-PDF-RAG-Chatbot',
+      description: 'Document-grounded question answering and context retrieval pipeline using LangChain, FAISS, and local LLM orchestration.',
+      language: 'Python',
+      stargazers_count: 4,
+      forks_count: 1,
+      html_url: 'https://github.com/samdroz/AI-PDF-RAG-Chatbot'
+    },
+    {
+      name: 'CampusOS',
+      description: 'An offline-first Windows desktop application designed to help college students manage their academic lives in one place.',
+      language: 'TypeScript',
+      stargazers_count: 0,
+      forks_count: 0,
+      html_url: 'https://github.com/samdroz/CampusOS'
+    },
+    {
       name: 'Project_ARGUS',
       description: 'Next-generation visual surveillance and real-time situational intelligence architecture.',
       language: 'Python',
       stargazers_count: 5,
       forks_count: 1,
       html_url: 'https://github.com/samdroz/Project_ARGUS'
-    },
-    {
-      name: 'smart-traffic-management-system',
-      description: 'An AI-powered traffic monitoring system using computer vision to detect vehicles and assist with intelligent traffic management.',
-      language: 'Python',
-      stargazers_count: 3,
-      forks_count: 1,
-      html_url: 'https://github.com/samdroz/smart-traffic-management-system'
-    },
-    {
-      name: 'Medi_Assist_Chatbot',
-      description: 'An AI-powered conversational assistant designed to provide healthcare-related information through an interactive chatbot interface.',
-      language: 'Python',
-      stargazers_count: 2,
-      forks_count: 0,
-      html_url: 'https://github.com/samdroz/Medi_Assist_Chatbot'
-    },
-    {
-      name: 'face-detection-opencv',
-      description: 'A real-time computer vision project for face detection using OpenCV and Python.',
-      language: 'Python',
-      stargazers_count: 1,
-      forks_count: 0,
-      html_url: 'https://github.com/samdroz/face-detection-opencv'
     }
   ];
 
@@ -59,11 +51,11 @@ async function fetchGitHubData() {
     const userRes = await fetch(`https://api.github.com/users/${username}`);
     const user = userRes.ok ? await userRes.json() : fallbackProfile;
 
-    const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-    const repos = reposRes.ok ? await reposRes.json() : fallbackRepos;
+    const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=12`);
+    const rawRepos = reposRes.ok ? await reposRes.json() : fallbackRepos;
 
     renderGitHubProfile(user);
-    renderGitHubRepos(repos);
+    renderGitHubRepos(rawRepos);
   } catch (err) {
     console.warn('GitHub API fetch failed, rendering fallback data:', err);
     renderGitHubProfile(fallbackProfile);
@@ -118,7 +110,22 @@ function renderGitHubRepos(repos) {
     return;
   }
 
-  reposTarget.innerHTML = repos.slice(0, 4).map(repo => `
+  // Filter out the 'portfolio' repository completely
+  const filteredRepos = repos.filter(repo => repo.name && repo.name.toLowerCase() !== 'portfolio');
+
+  // Maintain explicit order for featured open source repositories
+  const targetNames = ['AI-PDF-RAG-Chatbot', 'CampusOS', 'Project_ARGUS'];
+  const highlighted = [];
+
+  targetNames.forEach(name => {
+    const match = filteredRepos.find(r => r.name.toLowerCase() === name.toLowerCase());
+    if (match) highlighted.push(match);
+  });
+
+  // Use the highlighted 3 repositories, or first 3 non-portfolio repositories
+  const displayRepos = highlighted.length === targetNames.length ? highlighted : filteredRepos.slice(0, 3);
+
+  reposTarget.innerHTML = displayRepos.map(repo => `
     <div class="gh-repo-item">
       <div>
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">

@@ -24,9 +24,76 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2306080e'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='bold' font-size='48' fill='%2300f0ff'>SDR</text></svg>">
+
+  <!-- Early session check: prevent intro flash on revisit in same session -->
+  <script>
+    try {
+      if (sessionStorage.getItem('sdr_portfolio_intro_seen') === 'true') {
+        document.documentElement.classList.add('intro-already-seen');
+      }
+    } catch(e) {}
+  </script>
+
+  <!-- Accessibility & Fallback: Graceful degradation if JavaScript is disabled -->
+  <noscript>
+    <style>
+      .cinematic-intro { display: none !important; }
+      .scroll-progress-bar { display: none !important; }
+      .name-line, .status-badge, .hero-headline, .hero-desc, .hero-cta-group .btn, .hero-social-group { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 </head>
 
 <body>
+  <!-- Global Scroll Progress Indicator -->
+  <div id="scroll-progress-bar" class="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- Cinematic Startup Animation Overlay -->
+  <div id="cinematic-intro" class="cinematic-intro" role="dialog" aria-modal="true" aria-label="System Initializing">
+    <!-- Ambient mesh & cybernetic grid lines -->
+    <div class="intro-bg-grid"></div>
+    <div class="intro-ambient-glow"></div>
+    <div class="intro-scan-line"></div>
+
+    <div class="intro-content">
+      <!-- Minimalist Monogram Identity Mark -->
+      <div class="intro-brand-wrapper">
+        <div class="intro-brand-corners">
+          <span class="corner tl"></span>
+          <span class="corner tr"></span>
+          <span class="corner bl"></span>
+          <span class="corner br"></span>
+        </div>
+        <div class="intro-monogram">SDR</div>
+        <div class="intro-brand-glow"></div>
+      </div>
+
+      <!-- System Diagnostic / Telemetry Sequence -->
+      <div class="intro-telemetry">
+        <div class="intro-sys-tag">AI RESEARCH LAB // WORKSPACE INITIALIZATION</div>
+        <div class="intro-status-text" id="intro-status-text">INITIALIZING AI PERCEPTION LAB...</div>
+      </div>
+
+      <!-- Precision Progress Indicator -->
+      <div class="intro-progress-container">
+        <div class="intro-progress-track">
+          <div class="intro-progress-fill" id="intro-progress-fill"></div>
+          <div class="intro-progress-glow" id="intro-progress-glow"></div>
+        </div>
+        <div class="intro-progress-meta">
+          <span class="intro-meta-left" id="intro-meta-task">SYS_CHECK.INIT</span>
+          <span class="intro-meta-percent" id="intro-meta-percent">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Skip Action -->
+    <button id="intro-skip-btn" class="intro-skip-btn" aria-label="Skip Introduction">
+      <span>SKIP INTRO</span>
+      <kbd>ESC</kbd>
+    </button>
+  </div>
+
   <!-- Ambient Glow & Dynamic Background Canvas -->
   <div class="dark-glow-ambient"></div>
   <canvas id="neural-canvas"></canvas>
@@ -325,6 +392,7 @@
         <!-- Project Filtering Controls -->
         <div class="project-filters">
           <button class="filter-btn active" data-filter="all">All Projects</button>
+          <button class="filter-btn" data-filter="desktop">Desktop Apps</button>
           <button class="filter-btn" data-filter="cv">Computer Vision</button>
           <button class="filter-btn" data-filter="chatbots">Chatbots & LLMs</button>
           <button class="filter-btn" data-filter="aiml">AI / ML</button>
@@ -626,5 +694,6 @@
   <script src="js/github.js"></script>
   <script src="js/terminal.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
 </body>
 </html>

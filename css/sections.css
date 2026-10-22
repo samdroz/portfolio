@@ -819,7 +819,7 @@
 
 .gh-repos-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -854,9 +854,13 @@
   gap: 1.5rem;
 }
 
+#certifications {
+  scroll-margin-top: calc(var(--header-height) + 2rem);
+}
+
 .cert-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-top: 2rem;
 }
@@ -870,9 +874,8 @@
   position: relative;
 }
 
-/* Priority Cards (NPTEL & nasscom) - Top row, subtle cyan highlight & glow */
+/* Priority Cards (NPTEL & nasscom) - Subtle cyan highlight & glow */
 .cert-card.priority {
-  grid-column: span 3;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 22, 45, 0.85) 100%);
   border: 1px solid rgba(0, 240, 255, 0.38);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(0, 240, 255, 0.1);
@@ -889,9 +892,8 @@
   color: var(--accent-cyan);
 }
 
-/* Standard Cards (IBM, Microsoft Learn, AWS) - Second row */
+/* Standard Cards (NPTEL, IBM, Microsoft Learn, AWS) */
 .cert-card:not(.priority) {
-  grid-column: span 2;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   padding: 1.5rem;
